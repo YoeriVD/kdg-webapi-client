@@ -58,7 +58,8 @@ namespace ManlyManFoodClient
 
 		private async void GetRecipes(object sender, EventArgs e)
 		{
-			var request = new HttpRequestMessage(HttpMethod.Get, "recipes");
+			//var request = new HttpRequestMessage(HttpMethod.Get, "recipes");
+			var request = new HttpRequestMessage(HttpMethod.Get, "auth/recipes");
 
 			var response = await _client.SendAsync(request);
 			if (response.IsSuccessStatusCode)
@@ -83,8 +84,8 @@ namespace ManlyManFoodClient
 		private async Task GetToken()
 		{
 			var request = new HttpRequestMessage(HttpMethod.Post, "token");
-			const string username = "";
-			const string password = "";
+			const string username = "YoeriVD@yoeri.be";
+			const string password = "YoeriVD";
 			const string grantType = "password";
 			request.Content = new StringContent(
 				string.Format("username={0}&password={1}&grant_type={2}", username, password, grantType),
