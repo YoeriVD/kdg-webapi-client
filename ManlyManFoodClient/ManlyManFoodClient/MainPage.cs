@@ -41,7 +41,11 @@ namespace ManlyManFoodClient
 				Text = "Get recipes with OAUTH"
 			};
 			btnOAuth.Clicked += GetRecipesOAuth;
-
+			var btnAddRecipe = new Button()
+			{
+				Text = "Add recipe"
+			};
+			btnAddRecipe.Clicked += AddRecipe;
 			var stackLayout = new StackLayout()
 			{
 				VerticalOptions = LayoutOptions.FillAndExpand,
@@ -50,7 +54,8 @@ namespace ManlyManFoodClient
 					new Label() {Text = "Recipes", XAlign = TextAlignment.Center},
 					_recipesListView,
 					btnSimple,
-					btnOAuth
+					btnOAuth,
+					btnAddRecipe
 				}
 			};
 			return stackLayout;
@@ -70,7 +75,7 @@ namespace ManlyManFoodClient
 			}
 			else
 			{
-				await DisplayAlert("Oops!", string.Format("{0} : {1}", response.StatusCode, response.ReasonPhrase), "Got it!");
+				await DisplayAlert("Oops!", string.Format("{0} : {1}", (int)response.StatusCode, response.ReasonPhrase), "Got it!");
 			}
 
 		}
@@ -96,6 +101,15 @@ namespace ManlyManFoodClient
 			_client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", jsonToken["access_token"]));
 		}
 
+		private async void AddRecipe(object sender, EventArgs e)
+		{
+			var recipe = new Recipe() { Name = "This is a test" };
+			var recipeContent = JsonConvert.SerializeObject(recipe);
+			var request = new HttpRequestMessage(HttpMethod.Post, "recipes");
+			request.Content = new StringContent(recipeContent, Encoding.UTF8, "application/json");
+			var response = await _client.SendAsync(request);
+			await DisplayAlert("Result", string.Format("{0} : {1}", (int)response.StatusCode, response.ReasonPhrase), "Got it!");
+		}
 		private void GoToIngredientDetail(object sender, ItemTappedEventArgs e)
 		{
 			var recipe = (Recipe)e.Item;
